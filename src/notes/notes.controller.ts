@@ -14,13 +14,16 @@ import { CreateNoteDto } from "./dto/createNote.dto";
 import { SaveValidation } from "src/pipes/SaveValidation.pipe";
 import { UpdateNoteDto } from "./dto/updateNote.dto";
 import { UpdateValidation } from "../pipes/UpdateValidation.pipe";
+import { getStats } from "src/helpers/getStats";
 @Controller("notes")
 export class NotesController {
   constructor(private NotesService: NotesService) {}
 
   @Get("/stats")
-  async getStats() {
-    return { stats: "stats" };
+  async getNotesStats(): Promise<any> {
+    const notes = await this.getAllNotes();
+    const stats = await getStats(notes);
+    return stats;
   }
 
   @Post()
