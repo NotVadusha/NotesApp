@@ -7,36 +7,64 @@ import {
   Delete,
   Body,
   Param,
-  Req,
+  NotFoundException,
+  ParseIntPipe,
 } from "@nestjs/common";
 import { CreateNoteDto } from "./dto/createNote.dto";
-
+import { SaveValidation } from "src/pipes/SaveValidation.pipe";
+import { UpdateNoteDto } from "./dto/updateNote.dto";
+import { UpdateValidation } from "../pipes/UpdateValidation.pipe";
 @Controller("notes")
 export class NotesController {
   constructor(private NotesService: NotesService) {}
 
+  @Get("/stats")
+  async getStats() {
+    return { stats: "stats" };
+  }
+
   @Post()
-  postNote(@Body() noteDto: CreateNoteDto) {
+  async postNote(@Body(SaveValidation) noteDto: CreateNoteDto) {
     return this.NotesService.postNote(noteDto);
   }
+
   @Get()
-  getAllNotes() {
-    return this.NotesService.getAllNotes();
+  async getAllNotes() {
+    const notes = await this.NotesService.getAllNotes();
+    if (notes.length < 1) {
+      throw new NotFoundException("There is no notes in DB");
+    }
+    return notes;
   }
+
   @Get(":id")
-  getOneNote(@Param("id") noteId: number) {
-    return this.NotesService.getOneNote(noteId);
+  async getOneNote(@Param("id", ParseIntPipe) noteId: number) {
+    const note = await this.NotesService.getOneNote(noteId);
+    if (!note) {
+      throw new NotFoundException("There is no note with such id in DB");
+    }
+    return note;
   }
+
   @Patch(":id")
-  patchNote(@Param("id") noteId: number, @Body() noteDto: CreateNoteDto) {
-    return this.NotesService.patchNote(noteDto, noteId);
+  async patchNote(
+    @Param("id", ParseIntPipe) noteId: number,
+    @Body(UpdateValidation) noteDto: UpdateNoteDto
+  ) {
+    const [note] = await this.NotesService.patchNote(noteDto, noteId);
+
+    if (note < 1) {
+      throw new NotFoundException("There is no note with such id in DB");
+    }
+    return await this.NotesService.getOneNote(noteId);
   }
+
   @Delete(":id")
-  deleteNote(@Param("id") noteId: number) {
-    return this.NotesService.deleteNote(noteId);
-  }
-  @Get("/stats")
-  getStats() {
-    return;
+  async deleteNote(@Param("id", ParseIntPipe) noteId: number) {
+    const note = await this.NotesService.deleteNote(noteId);
+    if (!note) {
+      throw new NotFoundException("There is no note with such id in DB");
+    }
+    return { Message: "Successfully deleted" };
   }
 }
