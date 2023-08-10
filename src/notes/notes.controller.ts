@@ -12,7 +12,8 @@ import {
 } from "@nestjs/common";
 import { CreateNoteDto } from "./dto/createNote.dto";
 import { SaveValidation } from "src/pipes/SaveValidation.pipe";
-
+import { UpdateNoteDto } from "./dto/updateNote.dto";
+import { UpdateValidation } from "../pipes/UpdateValidation.pipe";
 @Controller("notes")
 export class NotesController {
   constructor(private NotesService: NotesService) {}
@@ -21,10 +22,12 @@ export class NotesController {
   async getStats() {
     return { stats: "stats" };
   }
+
   @Post()
   async postNote(@Body(SaveValidation) noteDto: CreateNoteDto) {
     return this.NotesService.postNote(noteDto);
   }
+
   @Get()
   async getAllNotes() {
     const notes = await this.NotesService.getAllNotes();
@@ -33,6 +36,7 @@ export class NotesController {
     }
     return notes;
   }
+
   @Get(":id")
   async getOneNote(@Param("id", ParseIntPipe) noteId: number) {
     const note = await this.NotesService.getOneNote(noteId);
@@ -41,21 +45,26 @@ export class NotesController {
     }
     return note;
   }
+
   @Patch(":id")
   async patchNote(
     @Param("id", ParseIntPipe) noteId: number,
-    @Body() noteDto: CreateNoteDto
+    @Body(UpdateValidation) noteDto: UpdateNoteDto
   ) {
-    const note = await this.NotesService.patchNote(noteDto, noteId);
-    console.log(note);
-    return note;
+    const [note] = await this.NotesService.patchNote(noteDto, noteId);
+
+    if (note < 1) {
+      throw new NotFoundException("There is no note with such id in DB");
+    }
+    return await this.NotesService.getOneNote(noteId);
   }
+
   @Delete(":id")
   async deleteNote(@Param("id", ParseIntPipe) noteId: number) {
     const note = await this.NotesService.deleteNote(noteId);
     if (!note) {
       throw new NotFoundException("There is no note with such id in DB");
     }
-    return note;
+    return { Message: "Successfully deleted" };
   }
 }
