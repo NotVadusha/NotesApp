@@ -1,9 +1,8 @@
 interface INote {
-  title: String;
-  content?: String;
-  is_archived: Boolean;
-  created_at?: Date;
-  category: String;
+  title: string;
+  content?: string;
+  is_archived: boolean;
+  category: string;
 }
 
 export default INote;
