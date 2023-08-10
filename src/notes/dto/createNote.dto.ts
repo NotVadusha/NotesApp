@@ -1,4 +1,4 @@
-import { IsString, IsBoolean, IsNotEmpty } from "class-validator";
+import { IsString, IsBoolean, IsNotEmpty, IsOptional } from "class-validator";
 
 export class CreateNoteDto {
   @IsString({ message: "Must be a string" })
@@ -6,7 +6,8 @@ export class CreateNoteDto {
   readonly title: string;
 
   @IsString({ message: "Must be a string" })
-  readonly content?: string;
+  @IsOptional()
+  readonly content: string;
 
   @IsString({ message: "Must be a string" })
   @IsNotEmpty()

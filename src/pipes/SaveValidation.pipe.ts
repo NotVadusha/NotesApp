@@ -13,7 +13,7 @@ export class SaveValidation implements PipeTransform<any> {
   async transform(value: any, metadata: ArgumentMetadata): Promise<any> {
     const note = plainToInstance(CreateNoteDto, value);
     const errors = await validate(note);
-    console.log(errors);
+
     if (errors.length) {
       const messages = errors.map((error) => {
         return `${error.property}: ${
