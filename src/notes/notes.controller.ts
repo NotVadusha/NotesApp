@@ -27,8 +27,12 @@ export class NotesController {
   }
 
   @Post()
-  async postNote(@Body(SaveValidation) noteDto: CreateNoteDto) {
-    return this.NotesService.postNote(noteDto);
+  async postNote(
+    @Body(SaveValidation)
+    { title, content, is_archived, category }: CreateNoteDto
+  ) {
+    const newNote = { title, content, is_archived, category };
+    return this.NotesService.postNote(newNote);
   }
 
   @Get()
@@ -52,9 +56,17 @@ export class NotesController {
   @Patch(":id")
   async patchNote(
     @Param("id", ParseIntPipe) noteId: number,
-    @Body(UpdateValidation) noteDto: UpdateNoteDto
+    @Body(UpdateValidation)
+    { title, content, is_archived, category }: UpdateNoteDto
   ) {
-    const [note] = await this.NotesService.patchNote(noteDto, noteId);
+    const updatedNote = {
+      title,
+      content,
+      is_archived,
+      category,
+    };
+
+    const [note] = await this.NotesService.patchNote(updatedNote, noteId);
 
     if (note < 1) {
       throw new NotFoundException("There is no note with such id in DB");
