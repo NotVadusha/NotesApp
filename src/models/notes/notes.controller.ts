@@ -11,7 +11,7 @@ import {
   ParseIntPipe,
 } from "@nestjs/common";
 import { CreateNoteDto } from "./dto/createNote.dto";
-import { SaveValidation } from "common/pipes/SaveValidation.pipe";
+import { SaveValidation } from "src/common/pipes/SaveValidation.pipe";
 import { UpdateNoteDto } from "./dto/updateNote.dto";
 import { UpdateValidation } from "../../common/pipes/UpdateValidation.pipe";
 import { getStats } from "src/common/helpers/getStats";

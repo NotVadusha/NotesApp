@@ -1,9 +1,8 @@
-import { UpdateNoteDto } from "../../notes/dto/updateNote.dto";
+import { UpdateNoteDto } from "src/models/notes/dto/updateNote.dto";
 import {
   ArgumentMetadata,
   Injectable,
   PipeTransform,
-  NotFoundException,
   BadRequestException,
 } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
