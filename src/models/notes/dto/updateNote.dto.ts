@@ -1,19 +1,19 @@
-import { IsString, IsBoolean, IsOptional } from "class-validator";
+import { IsString, IsBoolean, IsOptional, IsNotEmpty } from "class-validator";
 
 export class UpdateNoteDto {
   @IsString({ message: "Must be a string" })
-  @IsOptional()
+  @IsNotEmpty()
   readonly title: string;
 
   @IsString({ message: "Must be a string" })
   @IsOptional()
   readonly content: string;
 
-  @IsOptional()
   @IsString({ message: "Must be a string" })
+  @IsNotEmpty()
   readonly category: string;
 
   @IsBoolean({ message: "Must be a boolean" })
-  @IsOptional()
+  @IsNotEmpty()
   readonly is_archived: boolean;
 }
