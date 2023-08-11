@@ -1,5 +1,5 @@
 import INote from "src/interfaces/INote";
-
+type Note = INote;
 interface statsInterface {
   [key: string]: { archived: number; active: number };
 }

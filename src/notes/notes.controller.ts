@@ -21,7 +21,7 @@ export class NotesController {
 
   @Get("/stats")
   async getNotesStats(): Promise<any> {
-    const notes = await this.getAllNotes();
+    const notes = await this.NotesService.getAllNotes();
     const stats = await getStats(notes);
     return stats;
   }
