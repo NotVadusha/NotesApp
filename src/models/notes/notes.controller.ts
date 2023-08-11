@@ -11,24 +11,28 @@ import {
   ParseIntPipe,
 } from "@nestjs/common";
 import { CreateNoteDto } from "./dto/createNote.dto";
-import { SaveValidation } from "src/pipes/SaveValidation.pipe";
+import { SaveValidation } from "src/common/pipes/SaveValidation.pipe";
 import { UpdateNoteDto } from "./dto/updateNote.dto";
-import { UpdateValidation } from "../pipes/UpdateValidation.pipe";
-import { getStats } from "src/helpers/getStats";
+import { UpdateValidation } from "../../common/pipes/UpdateValidation.pipe";
+import { getStats } from "src/common/helpers/getStats";
 @Controller("notes")
 export class NotesController {
   constructor(private NotesService: NotesService) {}
 
   @Get("/stats")
   async getNotesStats(): Promise<any> {
-    const notes = await this.getAllNotes();
+    const notes = await this.NotesService.getAllNotes();
     const stats = await getStats(notes);
     return stats;
   }
 
   @Post()
-  async postNote(@Body(SaveValidation) noteDto: CreateNoteDto) {
-    return this.NotesService.postNote(noteDto);
+  async postNote(
+    @Body(SaveValidation)
+    { title, content, is_archived, category }: CreateNoteDto
+  ) {
+    const newNote = { title, content, is_archived, category };
+    return this.NotesService.postNote(newNote);
   }
 
   @Get()
@@ -52,9 +56,17 @@ export class NotesController {
   @Patch(":id")
   async patchNote(
     @Param("id", ParseIntPipe) noteId: number,
-    @Body(UpdateValidation) noteDto: UpdateNoteDto
+    @Body(UpdateValidation)
+    { title, content, is_archived, category }: UpdateNoteDto
   ) {
-    const [note] = await this.NotesService.patchNote(noteDto, noteId);
+    const updatedNote = {
+      title,
+      content,
+      is_archived,
+      category,
+    };
+
+    const [note] = await this.NotesService.patchNote(updatedNote, noteId);
 
     if (note < 1) {
       throw new NotFoundException("There is no note with such id in DB");

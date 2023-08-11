@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
-import { NotesModule } from "./notes/notes.module";
+import { NotesModule } from "./models/notes/notes.module";
 import { ConfigModule } from "@nestjs/config";
-import { SequelizeModule } from "@nestjs/sequelize";
+import { PsqlDBProviderModule } from "./database/provider.module";
 
 @Module({
   controllers: [],
@@ -9,16 +9,7 @@ import { SequelizeModule } from "@nestjs/sequelize";
     ConfigModule.forRoot({
       envFilePath: ".development.env",
     }),
-    SequelizeModule.forRoot({
-      dialect: "postgres",
-      host: process.env.POSTGRES_HOST,
-      port: Number(process.env.POSTGRES_PORT),
-      username: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DB,
-      models: [],
-      autoLoadModels: true,
-    }),
+    PsqlDBProviderModule,
     NotesModule,
   ],
   providers: [],
