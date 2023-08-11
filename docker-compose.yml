@@ -18,9 +18,6 @@ services:
     restart: always
 
   postgres:
-    build:
-      context: .
-      dockerfile: postgres.dockerfile
     container_name: postgres
     image: postgres:15
     env_file:

@@ -1,4 +1,4 @@
-import { UpdateNoteDto } from "./../notes/dto/updateNote.dto";
+import { UpdateNoteDto } from "../../notes/dto/updateNote.dto";
 import {
   ArgumentMetadata,
   Injectable,
