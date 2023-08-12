@@ -21,12 +21,13 @@
 
 ## Test API
 
-<p>To test this application you have to install docker and docker-compose</p>
+<p>To test this application you have to install npm, docker and docker-compose</p>
 
 <a href="https://www.postman.com/maintenance-cosmonaut-54646592/workspace/todos/request/28621909-5959b277-09f3-40b6-9648-176ba4c14afe">
 Postman api with requests
 </a>
 
+Clone repository, open app folder in console and execute:
 ```bash
 # build app
  npm install
